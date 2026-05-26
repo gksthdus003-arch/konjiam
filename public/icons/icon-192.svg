@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="Workshop app icon">
+  <rect width="192" height="192" rx="42" fill="#0f766e"/>
+  <circle cx="96" cy="70" r="35" fill="#f4f8f3"/>
+  <path d="M50 134c18-30 74-30 92 0" fill="none" stroke="#f4f8f3" stroke-width="18" stroke-linecap="round"/>
+  <path d="M76 68h40M96 48v40" stroke="#e85d4f" stroke-width="12" stroke-linecap="round"/>
+</svg>
