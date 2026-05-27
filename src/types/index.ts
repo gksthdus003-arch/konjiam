@@ -10,6 +10,14 @@ export interface ZoomArea {
   scale: number;
 }
 
+export interface MapHighlightArea {
+  xPercent: number;
+  yPercent: number;
+  widthPercent: number;
+  heightPercent: number;
+  shape?: "rect" | "ellipse";
+}
+
 export interface Location {
   id: string;
   name: string;
@@ -17,6 +25,12 @@ export interface Location {
   yPercent: number;
   zoomArea: ZoomArea;
   description: string;
+  isWorkshopVenue?: boolean;
+  labelOffset?: {
+    xPercent: number;
+    yPercent: number;
+  };
+  highlightArea?: MapHighlightArea;
 }
 
 export interface ScheduleItem {

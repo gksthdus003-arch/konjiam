@@ -19,6 +19,9 @@ export const locations: Location[] = [
     yPercent: 54,
     zoomArea: { xPercent: 64, yPercent: 54, scale: 1.85 },
     description: "1일차 로비 집결 장소입니다. E/W 빌리지 이동 동선의 기준 지점입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: 2, yPercent: -5 },
+    highlightArea: { xPercent: 65, yPercent: 55, widthPercent: 18, heightPercent: 25, shape: "rect" },
   },
   {
     id: "conference-room",
@@ -27,6 +30,9 @@ export const locations: Location[] = [
     yPercent: 44,
     zoomArea: { xPercent: 46, yPercent: 44, scale: 1.95 },
     description: "경영라운지와 웰니스 프로그램이 진행되는 실내 회의 공간입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: -5, yPercent: -10 },
+    highlightArea: { xPercent: 42, yPercent: 40, widthPercent: 23, heightPercent: 15, shape: "rect" },
   },
   {
     id: "neutinamu-bbq",
@@ -35,6 +41,9 @@ export const locations: Location[] = [
     yPercent: 29,
     zoomArea: { xPercent: 47, yPercent: 29, scale: 1.85 },
     description: "저녁 네트워킹과 BBQ가 진행되는 야외 공간입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: 3, yPercent: -4 },
+    highlightArea: { xPercent: 47, yPercent: 28, widthPercent: 9, heightPercent: 8, shape: "ellipse" },
   },
   {
     id: "forestreet",
@@ -67,6 +76,9 @@ export const locations: Location[] = [
     yPercent: 47,
     zoomArea: { xPercent: 35, yPercent: 47, scale: 1.9 },
     description: "식사와 간식 픽업 장소입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: -6, yPercent: 2 },
+    highlightArea: { xPercent: 35, yPercent: 48, widthPercent: 14, heightPercent: 11, shape: "rect" },
   },
   {
     id: "clock-square",
@@ -99,6 +111,9 @@ export const locations: Location[] = [
     yPercent: 44,
     zoomArea: { xPercent: 47, yPercent: 44, scale: 2 },
     description: "대표님배 볼링대회가 진행되는 락볼링장입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: 5, yPercent: 2 },
+    highlightArea: { xPercent: 46, yPercent: 45, widthPercent: 12, heightPercent: 9, shape: "rect" },
   },
   {
     id: "damha",
@@ -107,6 +122,9 @@ export const locations: Location[] = [
     yPercent: 49,
     zoomArea: { xPercent: 54, yPercent: 49, scale: 1.9 },
     description: "2일차 조식 장소입니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: 5, yPercent: 2 },
+    highlightArea: { xPercent: 56, yPercent: 49, widthPercent: 13, heightPercent: 10, shape: "rect" },
   },
   {
     id: "external-restaurant",
@@ -115,6 +133,9 @@ export const locations: Location[] = [
     yPercent: 42,
     zoomArea: { xPercent: 8, yPercent: 42, scale: 1.7 },
     description: "2일차 점심 식사가 진행되는 외부 식당입니다. 세부 장소는 공지로 안내됩니다.",
+    isWorkshopVenue: true,
+    labelOffset: { xPercent: 6, yPercent: -4 },
+    highlightArea: { xPercent: 8, yPercent: 42, widthPercent: 10, heightPercent: 9, shape: "rect" },
   },
   {
     id: "eco-stream",
