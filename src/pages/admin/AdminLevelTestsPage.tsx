@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Badge } from "../../components/ui/Badge";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
@@ -11,7 +12,11 @@ const experienceLabel = {
 } as const;
 
 export function AdminLevelTestsPage() {
-  const participants = useWorkshopStore((state) => state.participants.filter((participant) => participant.role === "participant"));
+  const allParticipants = useWorkshopStore((state) => state.participants);
+  const participants = useMemo(
+    () => allParticipants.filter((participant) => participant.role === "participant"),
+    [allParticipants],
+  );
   const teams = useWorkshopStore((state) => state.teams);
   const assignParticipantTeam = useWorkshopStore((state) => state.assignParticipantTeam);
 

@@ -11,6 +11,16 @@ export const formatTime = (iso: string) =>
 
 export const formatTimeRange = (startIso: string, endIso: string) => `${formatTime(startIso)}-${formatTime(endIso)}`;
 
+export const formatDateLabel = (iso: string) =>
+  new Intl.DateTimeFormat("ko-KR", {
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+  }).format(new Date(iso));
+
+export const formatDateTimeRange = (startIso: string, endIso: string) =>
+  `${formatDateLabel(startIso)} ${formatTimeRange(startIso, endIso)}`;
+
 export const getEffectiveStatus = (schedule: ScheduleItem, now = new Date()): ScheduleStatus => {
   if (schedule.status === "active" || schedule.status === "ended" || schedule.status === "skipped") {
     return schedule.status;

@@ -1,11 +1,16 @@
 import { Users } from "lucide-react";
+import { useMemo } from "react";
 import { Badge } from "../../components/ui/Badge";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useWorkshopStore } from "../../store/workshopStore";
 
 export function AdminTeamsPage() {
-  const participants = useWorkshopStore((state) => state.participants.filter((participant) => participant.role === "participant"));
+  const allParticipants = useWorkshopStore((state) => state.participants);
+  const participants = useMemo(
+    () => allParticipants.filter((participant) => participant.role === "participant"),
+    [allParticipants],
+  );
   const teams = useWorkshopStore((state) => state.teams);
   const locations = useWorkshopStore((state) => state.locations);
   const assignParticipantTeam = useWorkshopStore((state) => state.assignParticipantTeam);

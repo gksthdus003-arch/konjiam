@@ -1,10 +1,11 @@
 import { CheckCircle2, FastForward, Play, StopCircle } from "lucide-react";
+import { useMemo } from "react";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
-import { formatTimeRange, getEffectiveStatus, statusLabel } from "../../lib/schedule";
-import { selectCurrentSchedule, selectOrderedSchedules, useWorkshopStore } from "../../store/workshopStore";
+import { formatDateTimeRange, getEffectiveStatus, sortSchedules, statusLabel } from "../../lib/schedule";
+import { selectCurrentSchedule, useWorkshopStore } from "../../store/workshopStore";
 import type { ScheduleStatus } from "../../types";
 
 const statuses: ScheduleStatus[] = ["scheduled", "active", "ended", "skipped"];
@@ -17,7 +18,8 @@ const statusTone = {
 } as const;
 
 export function AdminSchedulePage() {
-  const schedules = useWorkshopStore(selectOrderedSchedules);
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const orderedSchedules = useMemo(() => sortSchedules(schedules), [schedules]);
   const currentSchedule = useWorkshopStore(selectCurrentSchedule);
   const locations = useWorkshopStore((state) => state.locations);
   const startSchedule = useWorkshopStore((state) => state.startSchedule);
@@ -51,7 +53,7 @@ export function AdminSchedulePage() {
       </section>
 
       <section className="space-y-3 px-4">
-        {schedules.map((schedule) => {
+        {orderedSchedules.map((schedule) => {
           const location = locations.find((item) => item.id === schedule.locationId);
           const effectiveStatus = getEffectiveStatus(schedule);
           const isCurrent = currentSchedule?.id === schedule.id;
@@ -65,7 +67,7 @@ export function AdminSchedulePage() {
                     {schedule.quizOpen ? <Badge tone="blue">퀴즈 오픈</Badge> : null}
                   </div>
                   <h2 className="mt-2 text-base font-black text-ink">{schedule.title}</h2>
-                  <p className="mt-1 text-sm font-bold text-slate-500">{formatTimeRange(schedule.startTime, schedule.endTime)} · {location?.name}</p>
+                  <p className="mt-1 text-sm font-bold text-slate-500">{formatDateTimeRange(schedule.startTime, schedule.endTime)} · {location?.name}</p>
                 </div>
                 {isCurrent ? <CheckCircle2 className="shrink-0 text-pine" size={22} /> : null}
               </div>

@@ -1,13 +1,15 @@
 import { MapPin, Users } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../../components/ui/Card";
 import { useWorkshopStore } from "../../store/workshopStore";
 
 export function TeamPanel() {
   const activeParticipantId = useWorkshopStore((state) => state.activeParticipantId);
+  const participants = useWorkshopStore((state) => state.participants);
   const participant = useWorkshopStore((state) => state.participants.find((item) => item.id === activeParticipantId));
   const team = useWorkshopStore((state) => state.teams.find((item) => item.id === participant?.teamId));
-  const members = useWorkshopStore((state) => state.participants.filter((item) => item.teamId === team?.id));
+  const members = useMemo(() => participants.filter((item) => item.teamId === team?.id), [participants, team?.id]);
   const meetingLocation = useWorkshopStore((state) => state.locations.find((item) => item.id === team?.meetingLocationId));
 
   if (!team) {

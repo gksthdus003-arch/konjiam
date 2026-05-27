@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Badge } from "../components/ui/Badge";
 import { Card } from "../components/ui/Card";
 import { PageHeader } from "../components/ui/PageHeader";
-import { formatTimeRange, getEffectiveStatus, statusLabel } from "../lib/schedule";
+import { formatDateTimeRange, getEffectiveStatus, statusLabel } from "../lib/schedule";
 import { useWorkshopStore } from "../store/workshopStore";
 
 const statusTone = {
@@ -32,7 +32,7 @@ export function ScheduleDetailPage() {
     <div className="space-y-4">
       <PageHeader
         title="일정 상세"
-        eyebrow={formatTimeRange(schedule.startTime, schedule.endTime)}
+        eyebrow={formatDateTimeRange(schedule.startTime, schedule.endTime)}
         action={
           <Link to="/schedule" className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-slate-700 ring-1 ring-line">
             <ArrowLeft size={18} />
