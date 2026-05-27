@@ -17,7 +17,7 @@ export function AdminTeamsPage() {
 
   return (
     <div className="space-y-4">
-      <PageHeader title="조 배정" eyebrow="참가자별 팀 지정" />
+      <PageHeader title="사용자 관리" eyebrow="참가자 · 조 배정 · 레벨" />
 
       <section className="grid grid-cols-3 gap-2 px-4">
         {teams.map((team) => {
@@ -46,7 +46,14 @@ export function AdminTeamsPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <h2 className="text-base font-black text-ink">{participant.name}</h2>
-                  <p className="truncate text-xs font-bold text-slate-500">{meetingLocation ? `집결: ${meetingLocation.name}` : "집결 장소 미정"}</p>
+                  <p className="truncate text-xs font-bold text-slate-500">
+                    {participant.levelTest
+                      ? `평균 ${participant.levelTest.averageScore} · 자신감 ${participant.levelTest.confidence}/5`
+                      : "레벨 테스트 미제출"}
+                  </p>
+                  <p className="mt-0.5 truncate text-xs font-bold text-slate-500">
+                    {meetingLocation ? `집결: ${meetingLocation.name}` : "집결 장소 미정"}
+                  </p>
                 </div>
                 {team ? <Badge tone="green">{team.name}</Badge> : <Badge>미배정</Badge>}
               </div>

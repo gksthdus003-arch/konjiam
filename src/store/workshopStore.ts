@@ -36,8 +36,10 @@ interface WorkshopState {
   startSchedule: (scheduleId: string) => void;
   endSchedule: (scheduleId: string) => void;
   moveToNextSchedule: () => void;
+  updateSchedule: (scheduleId: string, patch: Partial<ScheduleItem>) => void;
   updateScheduleStatus: (scheduleId: string, status: ScheduleStatus) => void;
   toggleScheduleQuiz: (scheduleId: string, isOpen: boolean) => void;
+  addQuiz: (quiz: Omit<Quiz, "id">) => void;
   updateQuiz: (quizId: string, patch: Partial<Quiz>) => void;
   updateQuizOption: (quizId: string, optionIndex: number, value: string) => void;
   submitQuizResponse: (quizId: string, answer: string) => void;
@@ -117,6 +119,12 @@ export const useWorkshopStore = create<WorkshopState>((set, get) => ({
     if (!next) return;
     get().startSchedule(next.id);
   },
+  updateSchedule: (scheduleId, patch) =>
+    set((state) => ({
+      schedules: state.schedules.map((schedule) =>
+        schedule.id === scheduleId ? { ...schedule, ...patch } : schedule,
+      ),
+    })),
   updateScheduleStatus: (scheduleId, status) =>
     set((state) => ({
       schedules: state.schedules.map((schedule) =>
@@ -136,6 +144,16 @@ export const useWorkshopStore = create<WorkshopState>((set, get) => ({
     set((state) => ({
       schedules: state.schedules.map((schedule) => (schedule.id === scheduleId ? { ...schedule, quizOpen: isOpen } : schedule)),
       quizzes: state.quizzes.map((quiz) => (quiz.scheduleId === scheduleId ? { ...quiz, isOpen } : quiz)),
+    })),
+  addQuiz: (quiz) =>
+    set((state) => ({
+      quizzes: [
+        {
+          ...quiz,
+          id: `quiz-${crypto.randomUUID()}`,
+        },
+        ...state.quizzes,
+      ],
     })),
   updateQuiz: (quizId, patch) =>
     set((state) => ({

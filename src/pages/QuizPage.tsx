@@ -8,7 +8,7 @@ export function QuizPage() {
   const schedules = useWorkshopStore((state) => state.schedules);
   const orderedScheduleIds = sortSchedules(schedules).map((schedule) => schedule.id);
   const orderedQuizzes = [...quizzes].sort(
-    (a, b) => orderedScheduleIds.indexOf(a.scheduleId) - orderedScheduleIds.indexOf(b.scheduleId),
+    (a, b) => Number(b.isOpen) - Number(a.isOpen) || orderedScheduleIds.indexOf(a.scheduleId) - orderedScheduleIds.indexOf(b.scheduleId),
   );
 
   return (

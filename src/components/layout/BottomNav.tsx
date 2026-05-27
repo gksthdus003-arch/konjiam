@@ -1,12 +1,7 @@
 import {
-  Bell,
   CalendarDays,
   ClipboardCheck,
-  Home,
   Map,
-  Medal,
-  Settings,
-  ShieldCheck,
   Users,
 } from "lucide-react";
 import type { ComponentType } from "react";
@@ -19,19 +14,14 @@ interface NavItem {
 }
 
 const participantItems: NavItem[] = [
-  { to: "/", label: "홈", icon: Home },
   { to: "/map", label: "지도", icon: Map },
-  { to: "/schedule", label: "일정", icon: CalendarDays },
-  { to: "/quiz", label: "퀴즈", icon: Medal },
-  { to: "/team", label: "내 조", icon: Users },
+  { to: "/schedule", label: "일정표", icon: CalendarDays },
 ];
 
 const adminItems: NavItem[] = [
-  { to: "/admin", label: "관리", icon: Settings },
   { to: "/admin/schedule", label: "일정", icon: CalendarDays },
   { to: "/admin/quizzes", label: "퀴즈", icon: ClipboardCheck },
-  { to: "/admin/teams", label: "조", icon: ShieldCheck },
-  { to: "/admin/notices", label: "공지", icon: Bell },
+  { to: "/admin/users", label: "사용자", icon: Users },
 ];
 
 export function BottomNav() {
@@ -41,7 +31,11 @@ export function BottomNav() {
 
   return (
     <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-line bg-white/95 backdrop-blur">
-      <div className="grid grid-cols-5 gap-1 px-2 pb-2 pt-2">
+      <div
+        className={`grid gap-1 px-2 pb-2 pt-2 ${
+          items.length === 2 ? "grid-cols-2" : items.length === 3 ? "grid-cols-3" : "grid-cols-5"
+        }`}
+      >
         {items.map((item) => {
           const Icon = item.icon;
           return (

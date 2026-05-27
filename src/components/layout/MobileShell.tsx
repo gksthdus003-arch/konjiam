@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { BottomNav } from "./BottomNav";
 import { CurrentScheduleBar } from "./CurrentScheduleBar";
+import { QuizNotification } from "./QuizNotification";
 
 export function MobileShell() {
   return (
@@ -10,6 +11,7 @@ export function MobileShell() {
         <main className="min-h-screen pb-24 pt-[92px]">
           <Outlet />
         </main>
+        <QuizNotification />
         <BottomNav />
       </div>
     </div>

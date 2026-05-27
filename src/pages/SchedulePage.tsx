@@ -16,7 +16,7 @@ export function SchedulePage() {
 
   return (
     <div className="space-y-2">
-      <PageHeader title="일정표" eyebrow="시간순 전체 일정" />
+      <PageHeader title="일정표" eyebrow="시간 · 일정명 · 장소" />
       <ScheduleTimeline schedules={orderedSchedules} locations={locations} currentScheduleId={currentSchedule?.id} />
     </div>
   );
