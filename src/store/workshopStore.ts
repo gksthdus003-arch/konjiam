@@ -8,7 +8,7 @@ import {
   schedules,
   teams,
 } from "../data/mockData";
-import { resolveCurrentSchedule, resolveNextSchedule, sortSchedules } from "../lib/schedule";
+import { resolveCurrentSchedule, resolveNextSchedule } from "../lib/schedule";
 import type {
   LevelTestSubmission,
   Location,
@@ -213,16 +213,3 @@ export const useWorkshopStore = create<WorkshopState>((set, get) => ({
       notices: state.notices.map((notice) => (notice.id === noticeId ? { ...notice, isNew: false } : notice)),
     })),
 }));
-
-export const selectOrderedSchedules = (state: WorkshopState) => sortSchedules(state.schedules);
-
-export const selectCurrentSchedule = (state: WorkshopState) =>
-  resolveCurrentSchedule(state.schedules, state.manualCurrentScheduleId);
-
-export const selectActiveParticipant = (state: WorkshopState) =>
-  state.participants.find((participant) => participant.id === state.activeParticipantId);
-
-export const selectParticipantTeam = (state: WorkshopState) => {
-  const participant = selectActiveParticipant(state);
-  return state.teams.find((team) => team.id === participant?.teamId);
-};

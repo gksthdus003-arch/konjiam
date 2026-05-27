@@ -1,7 +1,8 @@
 import { CalendarClock, MapPin, SkipForward } from "lucide-react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatTimeRange, getEffectiveStatus, resolveNextSchedule, statusLabel } from "../../lib/schedule";
-import { selectCurrentSchedule, useWorkshopStore } from "../../store/workshopStore";
+import { formatTimeRange, getEffectiveStatus, resolveCurrentSchedule, resolveNextSchedule, statusLabel } from "../../lib/schedule";
+import { useWorkshopStore } from "../../store/workshopStore";
 import { Badge } from "../ui/Badge";
 
 const statusTone = {
@@ -13,10 +14,21 @@ const statusTone = {
 
 export function CurrentScheduleBar() {
   const navigate = useNavigate();
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
   const schedules = useWorkshopStore((state) => state.schedules);
-  const location = useWorkshopStore((state) => state.locations.find((item) => item.id === currentSchedule?.locationId));
-  const nextSchedule = resolveNextSchedule(schedules, currentSchedule?.id);
+  const locations = useWorkshopStore((state) => state.locations);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
+  const location = useMemo(
+    () => locations.find((item) => item.id === currentSchedule?.locationId),
+    [currentSchedule?.locationId, locations],
+  );
+  const nextSchedule = useMemo(
+    () => resolveNextSchedule(schedules, currentSchedule?.id),
+    [currentSchedule?.id, schedules],
+  );
 
   if (!currentSchedule) return null;
 

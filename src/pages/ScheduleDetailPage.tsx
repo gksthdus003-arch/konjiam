@@ -1,4 +1,5 @@
 import { ArrowLeft, MapPin, PackageCheck } from "lucide-react";
+import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Badge } from "../components/ui/Badge";
 import { Card } from "../components/ui/Card";
@@ -15,8 +16,13 @@ const statusTone = {
 
 export function ScheduleDetailPage() {
   const { scheduleId } = useParams();
-  const schedule = useWorkshopStore((state) => state.schedules.find((item) => item.id === scheduleId));
-  const location = useWorkshopStore((state) => state.locations.find((item) => item.id === schedule?.locationId));
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const locations = useWorkshopStore((state) => state.locations);
+  const schedule = useMemo(() => schedules.find((item) => item.id === scheduleId), [scheduleId, schedules]);
+  const location = useMemo(
+    () => locations.find((item) => item.id === schedule?.locationId),
+    [locations, schedule?.locationId],
+  );
 
   if (!schedule) {
     return (

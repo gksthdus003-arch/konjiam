@@ -19,8 +19,11 @@ const quizTypeLabel = {
 
 export function QuizCard({ quiz, schedule }: QuizCardProps) {
   const submitQuizResponse = useWorkshopStore((state) => state.submitQuizResponse);
-  const existingResponse = useWorkshopStore((state) =>
-    state.quizResponses.find((response) => response.quizId === quiz.id && response.participantId === state.activeParticipantId),
+  const quizResponses = useWorkshopStore((state) => state.quizResponses);
+  const activeParticipantId = useWorkshopStore((state) => state.activeParticipantId);
+  const existingResponse = useMemo(
+    () => quizResponses.find((response) => response.quizId === quiz.id && response.participantId === activeParticipantId),
+    [activeParticipantId, quiz.id, quizResponses],
   );
   const [answer, setAnswer] = useState(existingResponse?.answer ?? "");
   const isUnlocked = Boolean(quiz.isOpen || schedule?.quizOpen);

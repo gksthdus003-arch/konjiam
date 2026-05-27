@@ -1,10 +1,11 @@
 import { Bell, CalendarDays, ClipboardCheck, MapPinned, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "../../components/ui/Badge";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
-import { statusLabel } from "../../lib/schedule";
-import { selectCurrentSchedule, useWorkshopStore } from "../../store/workshopStore";
+import { resolveCurrentSchedule, statusLabel } from "../../lib/schedule";
+import { useWorkshopStore } from "../../store/workshopStore";
 
 const adminLinks = [
   { to: "/admin/schedule", label: "일정 관리", icon: CalendarDays, description: "시작, 종료, 현재 일정 지정" },
@@ -16,9 +17,19 @@ const adminLinks = [
 ];
 
 export function AdminHomePage() {
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
-  const openQuizCount = useWorkshopStore((state) => state.quizzes.filter((quiz) => quiz.isOpen).length);
-  const unassignedCount = useWorkshopStore((state) => state.participants.filter((participant) => participant.role === "participant" && !participant.teamId).length);
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
+  const quizzes = useWorkshopStore((state) => state.quizzes);
+  const participants = useWorkshopStore((state) => state.participants);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
+  const openQuizCount = useMemo(() => quizzes.filter((quiz) => quiz.isOpen).length, [quizzes]);
+  const unassignedCount = useMemo(
+    () => participants.filter((participant) => participant.role === "participant" && !participant.teamId).length,
+    [participants],
+  );
 
   return (
     <div className="space-y-4">

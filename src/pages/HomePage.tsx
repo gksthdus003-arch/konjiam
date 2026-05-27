@@ -1,28 +1,47 @@
 import { Bell, CalendarClock, ClipboardList, MapPin, Medal, Users } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "../components/ui/Badge";
 import { Card } from "../components/ui/Card";
 import { PageHeader } from "../components/ui/PageHeader";
-import { formatTimeRange, getEffectiveStatus, statusLabel } from "../lib/schedule";
-import { selectCurrentSchedule, selectParticipantTeam, useWorkshopStore } from "../store/workshopStore";
+import { formatTimeRange, getEffectiveStatus, resolveCurrentSchedule, statusLabel } from "../lib/schedule";
+import { useWorkshopStore } from "../store/workshopStore";
 
 export function HomePage() {
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
   const locations = useWorkshopStore((state) => state.locations);
-  const team = useWorkshopStore(selectParticipantTeam);
+  const teams = useWorkshopStore((state) => state.teams);
   const activeParticipantId = useWorkshopStore((state) => state.activeParticipantId);
   const participants = useWorkshopStore((state) => state.participants);
   const quizzes = useWorkshopStore((state) => state.quizzes);
-  const schedules = useWorkshopStore((state) => state.schedules);
   const notices = useWorkshopStore((state) => state.notices);
 
-  const participant = participants.find((item) => item.id === activeParticipantId);
-  const location = locations.find((item) => item.id === currentSchedule?.locationId);
-  const openQuizzes = quizzes.filter((quiz) => {
-    const schedule = schedules.find((item) => item.id === quiz.scheduleId);
-    return quiz.isOpen || schedule?.quizOpen;
-  });
-  const pinnedNotices = [...notices].sort((a, b) => Number(b.isPinned) - Number(a.isPinned)).slice(0, 2);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
+  const participant = useMemo(
+    () => participants.find((item) => item.id === activeParticipantId),
+    [activeParticipantId, participants],
+  );
+  const team = useMemo(() => teams.find((item) => item.id === participant?.teamId), [participant?.teamId, teams]);
+  const location = useMemo(
+    () => locations.find((item) => item.id === currentSchedule?.locationId),
+    [currentSchedule?.locationId, locations],
+  );
+  const openQuizzes = useMemo(
+    () =>
+      quizzes.filter((quiz) => {
+        const schedule = schedules.find((item) => item.id === quiz.scheduleId);
+        return quiz.isOpen || schedule?.quizOpen;
+      }),
+    [quizzes, schedules],
+  );
+  const pinnedNotices = useMemo(
+    () => [...notices].sort((a, b) => Number(b.isPinned) - Number(a.isPinned)).slice(0, 2),
+    [notices],
+  );
 
   return (
     <div className="space-y-4">

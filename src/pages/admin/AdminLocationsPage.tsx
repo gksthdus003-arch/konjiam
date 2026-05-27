@@ -2,14 +2,23 @@ import { MapPin } from "lucide-react";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { InteractiveMap } from "../../features/map/InteractiveMap";
-import { selectCurrentSchedule, useWorkshopStore } from "../../store/workshopStore";
-import { useState } from "react";
+import { resolveCurrentSchedule } from "../../lib/schedule";
+import { useWorkshopStore } from "../../store/workshopStore";
+import { useMemo, useState } from "react";
 
 export function AdminLocationsPage() {
   const [mode, setMode] = useState<"all" | "current">("all");
   const locations = useWorkshopStore((state) => state.locations);
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
-  const currentLocation = locations.find((location) => location.id === currentSchedule?.locationId);
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
+  const currentLocation = useMemo(
+    () => locations.find((location) => location.id === currentSchedule?.locationId),
+    [currentSchedule?.locationId, locations],
+  );
   const updateLocation = useWorkshopStore((state) => state.updateLocation);
 
   return (

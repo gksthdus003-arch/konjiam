@@ -1,14 +1,18 @@
 import { useMemo } from "react";
 import { PageHeader } from "../components/ui/PageHeader";
 import { ScheduleTimeline } from "../features/schedule/ScheduleTimeline";
-import { sortSchedules } from "../lib/schedule";
-import { selectCurrentSchedule, useWorkshopStore } from "../store/workshopStore";
+import { resolveCurrentSchedule, sortSchedules } from "../lib/schedule";
+import { useWorkshopStore } from "../store/workshopStore";
 
 export function SchedulePage() {
   const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
   const orderedSchedules = useMemo(() => sortSchedules(schedules), [schedules]);
   const locations = useWorkshopStore((state) => state.locations);
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
 
   return (
     <div className="space-y-2">

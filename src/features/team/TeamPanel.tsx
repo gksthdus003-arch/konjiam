@@ -7,10 +7,18 @@ import { useWorkshopStore } from "../../store/workshopStore";
 export function TeamPanel() {
   const activeParticipantId = useWorkshopStore((state) => state.activeParticipantId);
   const participants = useWorkshopStore((state) => state.participants);
-  const participant = useWorkshopStore((state) => state.participants.find((item) => item.id === activeParticipantId));
-  const team = useWorkshopStore((state) => state.teams.find((item) => item.id === participant?.teamId));
+  const teams = useWorkshopStore((state) => state.teams);
+  const locations = useWorkshopStore((state) => state.locations);
+  const participant = useMemo(
+    () => participants.find((item) => item.id === activeParticipantId),
+    [activeParticipantId, participants],
+  );
+  const team = useMemo(() => teams.find((item) => item.id === participant?.teamId), [participant?.teamId, teams]);
   const members = useMemo(() => participants.filter((item) => item.teamId === team?.id), [participants, team?.id]);
-  const meetingLocation = useWorkshopStore((state) => state.locations.find((item) => item.id === team?.meetingLocationId));
+  const meetingLocation = useMemo(
+    () => locations.find((item) => item.id === team?.meetingLocationId),
+    [locations, team?.meetingLocationId],
+  );
 
   if (!team) {
     return (

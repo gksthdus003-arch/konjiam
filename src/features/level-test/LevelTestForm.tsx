@@ -1,8 +1,8 @@
 import { ClipboardCheck } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
-import { selectActiveParticipant, useWorkshopStore } from "../../store/workshopStore";
+import { useWorkshopStore } from "../../store/workshopStore";
 import type { LevelTestSubmission } from "../../types";
 
 const experienceOptions: Array<{ value: LevelTestSubmission["experience"]; label: string }> = [
@@ -13,7 +13,12 @@ const experienceOptions: Array<{ value: LevelTestSubmission["experience"]; label
 ];
 
 export function LevelTestForm() {
-  const participant = useWorkshopStore(selectActiveParticipant);
+  const activeParticipantId = useWorkshopStore((state) => state.activeParticipantId);
+  const participants = useWorkshopStore((state) => state.participants);
+  const participant = useMemo(
+    () => participants.find((item) => item.id === activeParticipantId),
+    [activeParticipantId, participants],
+  );
   const submitLevelTest = useWorkshopStore((state) => state.submitLevelTest);
   const existing = participant?.levelTest;
   const [experience, setExperience] = useState<LevelTestSubmission["experience"]>(existing?.experience ?? "casual");

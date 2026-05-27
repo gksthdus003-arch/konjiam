@@ -4,8 +4,8 @@ import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { PageHeader } from "../../components/ui/PageHeader";
-import { formatDateTimeRange, getEffectiveStatus, sortSchedules, statusLabel } from "../../lib/schedule";
-import { selectCurrentSchedule, useWorkshopStore } from "../../store/workshopStore";
+import { formatDateTimeRange, getEffectiveStatus, resolveCurrentSchedule, sortSchedules, statusLabel } from "../../lib/schedule";
+import { useWorkshopStore } from "../../store/workshopStore";
 import type { ScheduleStatus } from "../../types";
 
 const statuses: ScheduleStatus[] = ["scheduled", "active", "ended", "skipped"];
@@ -19,8 +19,12 @@ const statusTone = {
 
 export function AdminSchedulePage() {
   const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
   const orderedSchedules = useMemo(() => sortSchedules(schedules), [schedules]);
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
   const locations = useWorkshopStore((state) => state.locations);
   const startSchedule = useWorkshopStore((state) => state.startSchedule);
   const endSchedule = useWorkshopStore((state) => state.endSchedule);

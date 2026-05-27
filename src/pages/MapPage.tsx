@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../components/ui/PageHeader";
 import { InteractiveMap } from "../features/map/InteractiveMap";
-import { selectCurrentSchedule, useWorkshopStore } from "../store/workshopStore";
+import { resolveCurrentSchedule } from "../lib/schedule";
+import { useWorkshopStore } from "../store/workshopStore";
 
 interface MapPageProps {
   initialMode?: "all" | "current";
@@ -9,9 +10,17 @@ interface MapPageProps {
 
 export function MapPage({ initialMode = "all" }: MapPageProps) {
   const [mode, setMode] = useState<"all" | "current">(initialMode);
-  const currentSchedule = useWorkshopStore(selectCurrentSchedule);
+  const schedules = useWorkshopStore((state) => state.schedules);
+  const manualCurrentScheduleId = useWorkshopStore((state) => state.manualCurrentScheduleId);
   const locations = useWorkshopStore((state) => state.locations);
-  const currentLocation = locations.find((location) => location.id === currentSchedule?.locationId);
+  const currentSchedule = useMemo(
+    () => resolveCurrentSchedule(schedules, manualCurrentScheduleId),
+    [manualCurrentScheduleId, schedules],
+  );
+  const currentLocation = useMemo(
+    () => locations.find((location) => location.id === currentSchedule?.locationId),
+    [currentSchedule?.locationId, locations],
+  );
 
   useEffect(() => {
     setMode(initialMode);
