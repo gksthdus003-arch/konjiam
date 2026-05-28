@@ -1,5 +1,5 @@
 import { LocateFixed, MapPinned, Minus, Plus, RotateCcw } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import type { Location } from "../../types";
 import { Button } from "../../components/ui/Button";
 
@@ -183,38 +183,36 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
               const showLabel = mode === "all" || isCurrent;
               const labelX = location.xPercent + (location.labelOffset?.xPercent ?? 0);
               const labelY = location.yPercent + (location.labelOffset?.yPercent ?? 0);
+
               return (
-                <button
-                  key={location.id}
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onModeChange("current");
-                  }}
-                  className={`absolute -translate-x-1/2 -translate-y-full text-left ${isCurrent ? "z-20" : "z-10"}`}
-                  style={{ left: `${location.xPercent}%`, top: `${location.yPercent}%` }}
-                  aria-label={location.name}
-                >
-                  <span
-                    className={`block rounded-full border-2 border-white shadow-lg ${
-                      isCurrent ? "h-7 w-7 animate-pulse bg-coral ring-4 ring-rose-200" : "h-4 w-4 bg-pine"
-                    }`}
-                  />
+                <Fragment key={location.id}>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onModeChange("current");
+                    }}
+                    className={`absolute -translate-x-1/2 -translate-y-full text-left ${isCurrent ? "z-20" : "z-10"}`}
+                    style={{ left: `${location.xPercent}%`, top: `${location.yPercent}%` }}
+                    aria-label={location.name}
+                  >
+                    <span
+                      className={`block rounded-full border-2 border-white shadow-lg ${
+                        isCurrent ? "h-7 w-7 animate-pulse bg-coral ring-4 ring-rose-200" : "h-4 w-4 bg-pine"
+                      }`}
+                    />
+                  </button>
                   {showLabel ? (
                     <span
-                      className={`absolute block max-w-36 whitespace-nowrap rounded-md bg-white/95 px-2 py-1 text-[11px] font-black shadow-sm ring-1 ring-line ${
-                        isCurrent ? "text-coral ring-rose-200" : "text-ink"
+                      className={`pointer-events-none absolute block max-w-36 -translate-x-1/2 whitespace-nowrap rounded-md bg-white/95 px-2 py-1 text-center text-[11px] font-black shadow-sm ring-1 ring-line ${
+                        isCurrent ? "z-30 text-coral ring-rose-200" : "z-20 text-ink"
                       }`}
-                      style={{
-                        left: `${labelX - location.xPercent}%`,
-                        top: `${labelY - location.yPercent}%`,
-                        transform: "translate(-50%, 0)",
-                      }}
+                      style={{ left: `${labelX}%`, top: `${labelY}%` }}
                     >
                       {location.name}
                     </span>
                   ) : null}
-                </button>
+                </Fragment>
               );
             })}
           </div>
