@@ -231,3 +231,19 @@ export const useWorkshopStore = create<WorkshopState>((set, get) => ({
       notices: state.notices.map((notice) => (notice.id === noticeId ? { ...notice, isNew: false } : notice)),
     })),
 }));
+if (import.meta.hot) {
+  import.meta.hot.accept("../data/mockData", (nextMockData) => {
+    if (!nextMockData) return;
+
+    useWorkshopStore.setState({
+      locations: nextMockData.locations,
+      schedules: nextMockData.schedules,
+      quizzes: nextMockData.quizzes,
+      participants: nextMockData.participants,
+      teams: nextMockData.teams,
+      notices: nextMockData.notices,
+      manualCurrentScheduleId: nextMockData.initialManualCurrentScheduleId,
+    });
+  });
+}
+
