@@ -15,9 +15,9 @@ export const locations: Location[] = [
   {
     id: "ew-lounge",
     name: "E/W 라운지",
-    xPercent: 75,
+    xPercent: 120,
     yPercent: 54,
-    zoomArea: { xPercent: 64, yPercent: 54, scale: 1.85 },
+    zoomArea: { xPercent: 120, yPercent: 54, scale: 3 },
     description: "1일차 로비 집결 장소",
     isWorkshopVenue: true,
     labelOffset: { xPercent: 9, yPercent: -5 },
