@@ -34,16 +34,16 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
       }
 
       const rect = viewport.getBoundingClientRect();
-      const nextScale = location.zoomArea.scale;
+      const nextScale = clamp(location.zoomArea.scale, 1, 3.2);
       const mapWidth = rect.width;
-      const mapHeight = mapWidth * (1600 / 1200);
+      const mapHeight = rect.height;
       const targetX = (mapWidth * location.zoomArea.xPercent) / 100;
       const targetY = (mapHeight * location.zoomArea.yPercent) / 100;
 
       setScale(nextScale);
       setOffset({
-        x: rect.width / 2 - targetX * nextScale,
-        y: rect.height / 2 - targetY * nextScale,
+        x: clamp(rect.width / 2 - targetX * nextScale, rect.width - mapWidth * nextScale, 0),
+        y: clamp(rect.height / 2 - targetY * nextScale, rect.height - mapHeight * nextScale, 0),
       });
     },
     [],
@@ -64,7 +64,21 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
   }, [resetView]);
 
   const zoomBy = (delta: number) => {
-    setScale((current) => clamp(current + delta, 0.9, 3.2));
+    const nextScale = clamp(scale + delta, 1, 3.2);
+    const viewport = viewportRef.current;
+
+    if (viewport) {
+      const rect = viewport.getBoundingClientRect();
+      const scaledWidth = rect.width * nextScale;
+      const scaledHeight = rect.height * nextScale;
+
+      setOffset((current) => ({
+        x: clamp(current.x, rect.width - scaledWidth, 0),
+        y: clamp(current.y, rect.height - scaledHeight, 0),
+      }));
+    }
+
+    setScale(nextScale);
   };
 
   return (
@@ -95,16 +109,20 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
       <div className="px-4">
         <div
           ref={viewportRef}
-          className="relative h-[62vh] min-h-[470px] overflow-hidden rounded-lg border border-line bg-white shadow-sm touch-none"
+          className="relative aspect-square w-full overflow-hidden rounded-lg border border-line bg-white shadow-sm touch-none"
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             setDragStart({ x: event.clientX, y: event.clientY, offsetX: offset.x, offsetY: offset.y });
           }}
           onPointerMove={(event) => {
             if (!dragStart) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const scaledWidth = rect.width * scale;
+            const scaledHeight = rect.height * scale;
+
             setOffset({
-              x: dragStart.offsetX + event.clientX - dragStart.x,
-              y: dragStart.offsetY + event.clientY - dragStart.y,
+              x: clamp(dragStart.offsetX + event.clientX - dragStart.x, rect.width - scaledWidth, 0),
+              y: clamp(dragStart.offsetY + event.clientY - dragStart.y, rect.height - scaledHeight, 0),
             });
           }}
           onPointerUp={() => setDragStart(null)}
@@ -113,7 +131,7 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
           <div
             className="absolute left-0 top-0 w-full origin-top-left"
             style={{
-              aspectRatio: "1200 / 1600",
+              aspectRatio: "1 / 1",
               transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
               transition: dragStart ? "none" : "transform 220ms ease",
             }}
@@ -121,7 +139,7 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
             <img
               src={baseMapSrc}
               alt="곤지암 리조트 워크숍 지도"
-              className="h-full w-full select-none object-cover"
+              className="h-full w-full select-none object-contain"
               draggable={false}
               onError={() => setBaseMapSrc(FALLBACK_MAP_SRC)}
             />
@@ -130,7 +148,7 @@ export function InteractiveMap({ locations, currentLocation, mode, onModeChange 
                 src={BUILDINGS_MAP_SRC}
                 alt=""
                 aria-hidden="true"
-                className={`pointer-events-none absolute inset-0 h-full w-full select-none object-cover transition ${
+                className={`pointer-events-none absolute inset-0 h-full w-full select-none object-contain transition ${
                   mode === "current" ? "opacity-95" : "opacity-0"
                 }`}
                 draggable={false}
